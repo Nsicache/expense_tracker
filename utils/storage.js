@@ -1,9 +1,9 @@
 const STORAGE_KEY = 'envelope-budget-data';
 
-export const loadData = async () => {
+export const loadData = () => {
   try {
-    const data = localStorage.getItem(STORAGE_KEY);
-    return data ? JSON.parse(data) : null;
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
   } catch (error) {
     console.error('Error loading data:', error);
     return null;
