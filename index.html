@@ -7,23 +7,18 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Add this right after <body> -->
-<div id="setup-view" class="view active-view">
-  <div class="card">
-    <h2>Set Initial Balance</h2>
-    <div class="form-group">
-      <label for="initial-balance">Your Starting Cash (₦)</label>
-      <input type="number" id="initial-balance" min="0" step="100" required>
+  <div id="setup-view" class="view">
+    <div class="card">
+      <h2>Set Initial Balance</h2>
+      <div class="form-group">
+        <label for="initial-balance">Your Starting Cash (₦)</label>
+        <input type="number" id="initial-balance" min="0" step="100" required>
+      </div>
+      <button id="save-balance" type="button">Start Budgeting</button>
     </div>
-    <button id="save-balance">Start Budgeting</button>
   </div>
-</div>
 
-<!-- Modify existing #app div -->
-<div id="app" style="display:none">
-  [rest of your existing app HTML]
-</div>
-  <div id="app">
+  <div id="app" class="view">
     <header>
       <h1>Envelope Budget</h1>
       <nav>
