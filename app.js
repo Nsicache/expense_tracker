@@ -12,11 +12,10 @@ class App {
       categories: [],
       transactions: []
     };
-    
-    this.checkInitialization();
+    this.init();
   }
 
-  async checkInitialization() {
+  async init() {
     const data = await loadData();
     if (data) {
       this.state = data;
@@ -27,59 +26,46 @@ class App {
   }
 
   showSetup() {
-    document.getElementById('setup-view').style.display = 'block';
-    document.getElementById('app').style.display = 'none';
+    document.getElementById('setup-view').classList.add('active-view');
+    document.getElementById('app').classList.remove('active-view');
     
     document.getElementById('save-balance').addEventListener('click', () => {
-      const balance = parseFloat(document.getElementById('initial-balance').value);
-      if (!isNaN(balance) {
-        this.state = {
-          initialized: true,
-          balance,
-          categories: [],
-          transactions: []
-        };
-        saveData(this.state);
-        this.showApp();
+      const balanceInput = document.getElementById('initial-balance');
+      const balance = parseFloat(balanceInput.value);
+      
+      if (isNaN(balance) || balance <= 0) {
+        balanceInput.classList.add('error');
+        alert("Please enter a valid positive amount");
+        return;
       }
+
+      this.state = {
+        initialized: true,
+        balance,
+        categories: [
+          { name: "Food", assigned: 0, spent: 0 },
+          { name: "Transport", assigned: 0, spent: 0 },
+          { name: "Rent", assigned: 0, spent: 0 }
+        ],
+        transactions: []
+      };
+      
+      saveData(this.state);
+      this.showApp();
     });
   }
 
   showApp() {
-    document.getElementById('setup-view').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    this.init();
-  }
-
-  // ... rest of your existing app code ...
-}
-
-class App {
-  constructor() {
-    this.state = {
-      currentView: 'dashboard',
-      balance: 1000000,
-      categories: [
-        { name: 'Food', assigned: 50000, spent: 0 },
-        { name: 'Transport', assigned: 20000, spent: 0 },
-        { name: 'Rent', assigned: 300000, spent: 0 }
-      ],
-      transactions: []
-    };
-    this.init();
-  }
-
-  async init() {
-    const data = await loadData();
-    if (data) this.state = data;
-
+    document.getElementById('setup-view').classList.remove('active-view');
+    document.getElementById('app').classList.add('active-view');
+    
     this.components = {
       dashboard: new BudgetDashboard(this),
       transactionForm: new TransactionForm(this),
       transactionHistory: new TransactionHistory(this),
       reports: new ReportsView(this)
     };
-
+    
     this.setupNavigation();
     this.renderView();
   }
