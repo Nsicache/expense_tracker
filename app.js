@@ -1,4 +1,4 @@
-import { BudgetDashboard } from './components/BudgetDashboard';
+import { BudgetDashboard } from './components/BudgetDashboard.js';
 import { TransactionForm } from './components/TransactionForm.js';
 import { TransactionHistory } from './components/TransactionHistory.js';
 import { ReportsView } from './components/ReportsView.js';
@@ -28,11 +28,11 @@ class App {
   showSetup() {
     document.getElementById('setup-view').classList.add('active-view');
     document.getElementById('app').classList.remove('active-view');
-    
+
     document.getElementById('save-balance').addEventListener('click', () => {
       const balanceInput = document.getElementById('initial-balance');
       const balance = parseFloat(balanceInput.value);
-      
+
       if (isNaN(balance) || balance <= 0) {
         balanceInput.classList.add('error');
         alert("Please enter a valid positive amount");
@@ -49,7 +49,7 @@ class App {
         ],
         transactions: []
       };
-      
+
       saveData(this.state);
       this.showApp();
     });
@@ -58,15 +58,16 @@ class App {
   showApp() {
     document.getElementById('setup-view').classList.remove('active-view');
     document.getElementById('app').classList.add('active-view');
-    
+
     this.components = {
       dashboard: new BudgetDashboard(this),
       transactionForm: new TransactionForm(this),
       transactionHistory: new TransactionHistory(this),
       reports: new ReportsView(this)
     };
-    
+
     this.setupNavigation();
+    this.state.currentView = 'dashboard';
     this.renderView();
   }
 
