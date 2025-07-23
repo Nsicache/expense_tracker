@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const description = elements.descriptionInput.value.trim();
     const category = elements.categorySelect.value;
 
-    if (!isNaN(amount) {
+    if (!isNaN(amount) && amount > 0 && description) {
       // Update balance
       state.balance -= amount;
       
@@ -64,14 +64,14 @@ document.addEventListener('DOMContentLoaded', () => {
         amount: -amount,
         description,
         category,
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toLocaleDateString()
       });
 
       // Update category
       const categoryObj = state.categories.find(c => c.name === category);
       if (categoryObj) categoryObj.spent += amount;
 
-      // Limit transactions to last 20
+      // Limit transactions
       if (state.transactions.length > 20) {
         state.transactions.pop();
       }
@@ -79,6 +79,8 @@ document.addEventListener('DOMContentLoaded', () => {
       saveState();
       updateUI();
       hideTransactionForm();
+    } else {
+      alert('Please enter valid amount and description');
     }
   }
 
@@ -117,8 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
               <span>₦${formatCurrency(c.spent)} / ₦${formatCurrency(c.budget)}</span>
             </div>
             <div class="progress-bar">
-              <div class="progress-fill" style="width: ${Math.min(percentage, 100)}%;
-                background: ${percentage > 90 ? '#e74c3c' : percentage > 70 ? '#f39c12' : '#2ecc71'}">
+              <div class="progress-fill" 
+                   style="width: ${Math.min(percentage, 100)}%;
+                          background: ${percentage > 90 ? '#e74c3c' : percentage > 70 ? '#f39c12' : '#2ecc71'}">
               </div>
             </div>
           </li>
@@ -140,8 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
   function loadState() {
     const saved = localStorage.getItem('budget-app-state');
     if (saved) {
-      const parsed = JSON.parse(saved);
-      Object.assign(state, parsed);
+      try {
+        const parsed = JSON.parse(saved);
+        Object.assign(state, parsed);
+      } catch (e) {
+        console.error("Error loading state:", e);
+      }
     }
   }
 
