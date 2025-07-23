@@ -10,7 +10,40 @@
   <div id="app">
     <h1>Budget App</h1>
     <div id="balance">Initializing...</div>
-    <button id="add-transaction">Add Test Transaction</button>
+    
+    <button id="add-transaction">Add Transaction</button>
+    
+    <div id="transaction-form" class="card">
+      <h3>Add Transaction</h3>
+      <div class="form-group">
+        <label for="amount">Amount (₦)</label>
+        <input type="number" id="amount" min="0" step="100">
+      </div>
+      <div class="form-group">
+        <label for="description">Description</label>
+        <input type="text" id="description">
+      </div>
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category">
+          <option value="Food">Food</option>
+          <option value="Transport">Transport</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <button id="submit-transaction" class="primary">Submit</button>
+      <button id="cancel-transaction">Cancel</button>
+    </div>
+    
+    <div id="transactions" class="card">
+      <h3>Recent Transactions</h3>
+      <ul id="transactions-list"></ul>
+    </div>
+    
+    <div id="categories" class="card">
+      <h3>Categories</h3>
+      <ul id="categories-list"></ul>
+    </div>
   </div>
 
   <script src="app.js"></script>
