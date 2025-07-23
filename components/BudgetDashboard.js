@@ -5,22 +5,6 @@ export class BudgetDashboard {
   }
 
   render() {
-  const { balance, categories } = this.app.state;
-  // ... rest of your existing render code ...
-  
-  // Add this button to your dashboard:
-  <button id="reset-balance">Change Starting Balance</button>
-  
-  // Add this event listener:
-  document.getElementById('reset-balance').addEventListener('click', () => {
-    if (confirm("This will reset all your data. Continue?")) {
-      localStorage.removeItem('envelope-budget-data');
-      location.reload();
-    }
-  });
-}
-
-  render() {
     const { balance, categories } = this.app.state;
     const assignedTotal = categories.reduce((sum, cat) => sum + cat.assigned, 0);
     const unassigned = balance - assignedTotal;
@@ -30,6 +14,7 @@ export class BudgetDashboard {
         <div>Total Balance: ₦${this.format(balance)}</div>
         <div>Unassigned: ₦${this.format(unassigned)}</div>
       </div>
+      
       <div class="card">
         <h2>Categories</h2>
         ${categories.map(cat => this.renderCategory(cat)).join('')}
@@ -37,8 +22,7 @@ export class BudgetDashboard {
       </div>
     `;
 
-    document.getElementById('add-category-btn').addEventListener('click', () => this.showAddCategoryForm());
-    this.setupAssignButtons();
+    this.setupEventListeners();
   }
 
   renderCategory(category) {
@@ -51,7 +35,10 @@ export class BudgetDashboard {
           <strong>${category.name}</strong>
           <div>Assigned: ₦${this.format(category.assigned)} | Spent: ₦${this.format(category.spent)} | Remaining: ₦${this.format(remaining)}</div>
           <div class="category-progress">
-            <div class="category-progress-bar" style="width: ${percentSpent}%; background: ${percentSpent > 90 ? 'var(--danger)' : percentSpent > 70 ? 'var(--warning)' : 'var(--success)'}"></div>
+            <div class="category-progress-bar" 
+                 style="width: ${percentSpent}%;
+                        background: ${this.getProgressColor(percentSpent)}">
+            </div>
           </div>
         </div>
         <button class="assign-btn">Assign Funds</button>
@@ -63,7 +50,16 @@ export class BudgetDashboard {
     return amount.toLocaleString('en-NG', { minimumFractionDigits: 2 });
   }
 
-  setupAssignButtons() {
+  getProgressColor(percent) {
+    return percent > 90 ? 'var(--danger)' : 
+           percent > 70 ? 'var(--warning)' : 'var(--success)';
+  }
+
+  setupEventListeners() {
+    document.getElementById('add-category-btn')?.addEventListener('click', () => {
+      this.showAddCategoryForm();
+    });
+
     document.querySelectorAll('.assign-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const categoryName = e.target.closest('.category-item').dataset.category;
@@ -76,11 +72,11 @@ export class BudgetDashboard {
     const { balance, categories } = this.app.state;
     const unassigned = balance - categories.reduce((sum, cat) => sum + cat.assigned, 0);
 
-    const amount = parseFloat(prompt(`Amount to assign to ${categoryName} (Available: ₦${this.format(unassigned)}):`));
+    const amount = parseFloat(prompt(`Amount to assign to ${categoryName} (Available: ₦${this.format(unassigned)}:`));
     
     if (!isNaN(amount) && amount > 0) {
       if (amount > unassigned) {
-        alert(`You only have ₦${this.format(unassigned)} available!`);
+        alert(`Only ₦${this.format(unassigned)} available!`);
         return;
       }
 
@@ -99,10 +95,10 @@ export class BudgetDashboard {
       <div class="card" id="add-category-form">
         <h3>Add Category</h3>
         <div class="form-group">
-          <input type="text" id="new-category-name" placeholder="Name">
+          <input type="text" id="new-category-name" placeholder="Name" required>
         </div>
         <div class="form-group">
-          <input type="number" id="new-category-amount" placeholder="Amount (₦)" min="0">
+          <input type="number" id="new-category-amount" placeholder="Amount (₦)" min="0" required>
         </div>
         <button id="confirm-add-category">Save</button>
         <button id="cancel-add-category">Cancel</button>
@@ -120,7 +116,6 @@ export class BudgetDashboard {
             { name, assigned: amount, spent: 0 }
           ]
         });
-        document.getElementById('add-category-form').remove();
       }
     });
 
