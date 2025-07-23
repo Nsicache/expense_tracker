@@ -3,10 +3,10 @@ export class TransactionForm {
     this.app = app;
     this.container = document.getElementById('transactions-view');
   }
-  
+
   render() {
     const { categories } = this.app.state;
-    
+
     this.container.innerHTML = `
       <div class="card">
         <h2>Add Transaction</h2>
@@ -38,54 +38,49 @@ export class TransactionForm {
         </form>
       </div>
     `;
-    
-    this.setupForm();
+
     document.getElementById('trans-date').valueAsDate = new Date();
+    document.getElementById('transaction-form').addEventListener('submit', (e) => this.handleSubmit(e));
   }
 
-  setupForm() {
-    document.getElementById('transaction-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      const date = document.getElementById('trans-date').value;
-      const payee = document.getElementById('trans-payee').value.trim();
-      const amount = parseFloat(document.getElementById('trans-amount').value);
-      const category = document.getElementById('trans-category').value;
-      const notes = document.getElementById('trans-notes').value.trim();
+  handleSubmit(e) {
+    e.preventDefault();
 
-      if (!payee || isNaN(amount) || !category || amount <= 0) {
-        alert('Please fill all required fields with valid values');
-        return;
+    const date = document.getElementById('trans-date').value;
+    const payee = document.getElementById('trans-payee').value.trim();
+    const amount = parseFloat(document.getElementById('trans-amount').value);
+    const category = document.getElementById('trans-category').value;
+    const notes = document.getElementById('trans-notes').value.trim();
+
+    if (!payee || isNaN(amount) || amount <= 0 || !category) {
+      alert('Please fill all required fields with valid values');
+      return;
+    }
+
+    const newTransaction = {
+      id: Date.now().toString(),
+      date,
+      payee,
+      amount: -Math.abs(amount), // Ensure negative for expenses
+      category,
+      notes
+    };
+
+    // Update category spent amount
+    const updatedCategories = this.app.state.categories.map(cat => {
+      if (cat.name === category) {
+        return { ...cat, spent: cat.spent + Math.abs(amount) };
       }
-
-      const newTransaction = {
-        id: Date.now().toString(),
-        date,
-        payee,
-        amount: -Math.abs(amount), // Ensure negative for expenses
-        category,
-        notes
-      };
-
-      // Update category spent amount
-      const updatedCategories = this.app.state.categories.map(cat => {
-        if (cat.name === category) {
-          return {
-            ...cat,
-            spent: cat.spent + Math.abs(amount)
-          };
-        }
-        return cat;
-      });
-
-      this.app.updateState({
-        transactions: [newTransaction, ...this.app.state.transactions],
-        categories: updatedCategories
-      });
-
-      // Reset form
-      document.getElementById('transaction-form').reset();
-      document.getElementById('trans-date').valueAsDate = new Date();
+      return cat;
     });
+
+    this.app.updateState({
+      transactions: [newTransaction, ...this.app.state.transactions],
+      categories: updatedCategories
+    });
+
+    // Reset form
+    document.getElementById('transaction-form').reset();
+    document.getElementById('trans-date').valueAsDate = new Date();
   }
 }
