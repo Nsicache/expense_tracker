@@ -5,6 +5,22 @@ export class BudgetDashboard {
   }
 
   render() {
+  const { balance, categories } = this.app.state;
+  // ... rest of your existing render code ...
+  
+  // Add this button to your dashboard:
+  <button id="reset-balance">Change Starting Balance</button>
+  
+  // Add this event listener:
+  document.getElementById('reset-balance').addEventListener('click', () => {
+    if (confirm("This will reset all your data. Continue?")) {
+      localStorage.removeItem('envelope-budget-data');
+      location.reload();
+    }
+  });
+}
+
+  render() {
     const { balance, categories } = this.app.state;
     const assignedTotal = categories.reduce((sum, cat) => sum + cat.assigned, 0);
     const unassigned = balance - assignedTotal;
