@@ -1,4 +1,4 @@
-import { BudgetDashboard } from './components/BudgetDashboard.js';
+import { BudgetDashboard } from './components/BudgetDashboard';
 import { TransactionForm } from './components/TransactionForm.js';
 import { TransactionHistory } from './components/TransactionHistory.js';
 import { ReportsView } from './components/ReportsView.js';
