@@ -7,6 +7,56 @@ import { loadData, saveData } from './utils/storage.js';
 class App {
   constructor() {
     this.state = {
+      initialized: false,
+      balance: 0,
+      categories: [],
+      transactions: []
+    };
+    
+    this.checkInitialization();
+  }
+
+  async checkInitialization() {
+    const data = await loadData();
+    if (data) {
+      this.state = data;
+      this.showApp();
+    } else {
+      this.showSetup();
+    }
+  }
+
+  showSetup() {
+    document.getElementById('setup-view').style.display = 'block';
+    document.getElementById('app').style.display = 'none';
+    
+    document.getElementById('save-balance').addEventListener('click', () => {
+      const balance = parseFloat(document.getElementById('initial-balance').value);
+      if (!isNaN(balance) {
+        this.state = {
+          initialized: true,
+          balance,
+          categories: [],
+          transactions: []
+        };
+        saveData(this.state);
+        this.showApp();
+      }
+    });
+  }
+
+  showApp() {
+    document.getElementById('setup-view').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    this.init();
+  }
+
+  // ... rest of your existing app code ...
+}
+
+class App {
+  constructor() {
+    this.state = {
       currentView: 'dashboard',
       balance: 1000000,
       categories: [
