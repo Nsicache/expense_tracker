@@ -8,7 +8,7 @@ class App {
   constructor() {
     this.state = {
       currentView: 'dashboard',
-      balance: 1000000, // ₦1,000,000 starting balance
+      balance: 1000000,
       categories: [
         { name: 'Food', assigned: 50000, spent: 0 },
         { name: 'Transport', assigned: 20000, spent: 0 },
@@ -16,25 +16,24 @@ class App {
       ],
       transactions: []
     };
-    
     this.init();
   }
-  
+
   async init() {
     const data = await loadData();
     if (data) this.state = data;
-    
+
     this.components = {
       dashboard: new BudgetDashboard(this),
       transactionForm: new TransactionForm(this),
       transactionHistory: new TransactionHistory(this),
       reports: new ReportsView(this)
     };
-    
+
     this.setupNavigation();
     this.renderView();
   }
-  
+
   setupNavigation() {
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -43,17 +42,15 @@ class App {
       });
     });
   }
-  
+
   renderView() {
-    // Update active view and nav
     document.querySelectorAll('.view').forEach(v => v.classList.remove('active-view'));
     document.querySelectorAll('.nav-btn').forEach(b => 
       b.classList.toggle('active', b.dataset.view === this.state.currentView));
-    
+
     const currentView = document.getElementById(`${this.state.currentView}-view`);
     currentView.classList.add('active-view');
-    
-    // Render components
+
     if (this.state.currentView === 'transactions') {
       this.components.transactionForm.render();
       this.components.transactionHistory.render();
@@ -61,7 +58,7 @@ class App {
       this.components[this.state.currentView].render();
     }
   }
-  
+
   updateState(newState) {
     this.state = { ...this.state, ...newState };
     saveData(this.state);
