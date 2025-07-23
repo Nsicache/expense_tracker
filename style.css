@@ -1,75 +1,53 @@
 body {
   font-family: Arial, sans-serif;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  line-height: 1.6;
-  color: #333;
-}
-
-#app {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
 }
 
 .card {
-  background: white;
+  background: #f9f9f9;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 20px;
-}
-
-button {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.primary {
-  background: #4CAF50;
-  color: white;
-}
-
-.form-group {
+  padding: 15px;
   margin-bottom: 15px;
-}
-
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-input, select {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
-
-#transaction-form {
-  display: none;
-}
-
-#transactions-list, #categories-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-#transactions-list li, #categories-list li {
-  padding: 8px 0;
-  border-bottom: 1px solid #eee;
-  display: flex;
-  justify-content: space-between;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 #balance {
   font-size: 1.5rem;
   font-weight: bold;
+  margin: 20px 0;
   color: #2c3e50;
+}
+
+.form-group {
+  margin-bottom: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+button {
+  background: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#transactions {
+  list-style: none;
+  padding: 0;
+}
+
+#transactions li {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
 }
